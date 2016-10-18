@@ -8,7 +8,7 @@ clear all;
 %% LOAD PICTURES TO TEST THE GAUSSIAN CDBN
 
 for i = 1:9
-    str = ['./data/MITcoast/image_000',num2str(i)];
+    str = ['./CDBN/data/MITcoast/image_000',num2str(i)];
     str1  = strcat(str,'.jpg');
     image = imread(str1);
     image = double(image)/255;
@@ -66,7 +66,7 @@ layer{2}.type_input     = 'Gaussian';
 tic;
 
 [model,layer] = cdbn2D(layer);
-save('./model/model_parameter','model','layer');
+%save('./model/model_parameter','model','layer');
 
 toc;
 
