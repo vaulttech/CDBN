@@ -10,7 +10,7 @@ DEFAULT_LDFLAGS = -lstdc++
 
 ###############################################################################
 ###############################################################################
-MATLAB_DIR    = /opt/matlab_r2013a
+MATLAB_DIR    = /usr/local/MATLAB/R2016a
 MATLAB_CFLAGS = -I$(MATLAB_DIR)/extern/include -I$(MATLAB_DIR)/simulink/include \
 		-DMATLAB_MEX_FILE -ansi -fexceptions -fPIC -fno-omit-frame-pointer \
 		-pthread  -DMX_COMPAT_32 
@@ -24,7 +24,7 @@ MATLAB_LDFLAGS = -pthread -shared -Wl,--version-script,$(MATLAB_DIR)/extern/lib/
 ###############################################################################
 ###############################################################################
 CUDA_DIR     = /opt/cuda-5.0
-CUDA_NVCC    = $(CUDA_DIR)/bin/nvcc
+CUDA_NVCC    = nvcc #$(CUDA_DIR)/bin/nvcc
 CUDA_CFLAGS  = -I$(CUDA_DIR)/include 
 CUDA_LDFLAGS = -L$(CUDA_DIR)/lib -L$(CUDA_DIR)/lib64 -lcudart
 
