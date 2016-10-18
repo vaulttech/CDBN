@@ -64,6 +64,7 @@ layer{1}.learning_rate  = 0.05;
 layer{1}.sparsity       = 0.03;
 layer{1}.lambda1        = 5;
 layer{1}.lambda2        = 0.05;
+layer{1}.momentum       = 0;
 layer{1}.whiten         = 0;
 layer{1}.type_input     = 'Binary'; % OR 'Gaussian' 'Binary'
 
@@ -81,6 +82,7 @@ layer{2}.learning_rate  = 0.05;
 layer{2}.sparsity       = 0.02;
 layer{2}.lambda1        = 5;
 layer{2}.lambda2        = 0.05;
+layer{2}.momentum       = 0;
 layer{2}.whiten         = 0;
 layer{2}.type_input     = 'Binary';
 
@@ -93,12 +95,27 @@ layer{2}.type_input     = 'Binary';
 tic;
 
 [model,layer] = cdbn2D(layer);
-save('./model/model_parameter','model','layer');
+%save('./model/model_parameter','model','layer');
 
 toc;
 
 trainD  = model{1}.output;
 trainD1 = model{2}.output;
+
+
+%% ------------------------------- Figure ----------------------------------- %%
+
+%  POOLING MAPS
+figure(1);
+[r,c,n] = size(model{1}.output(:,:,:,1));
+visWeights(reshape(model{1}.output(:,:,:,1),r*c,n)); colormap gray
+title(sprintf('The first Pooling output'))
+drawnow
+
+% ORIGINAL SAMPLE
+figure(2);
+imagesc(layer{1}.inputdata(:,:,:,1)); colormap gray; axis image; axis off
+title(sprintf('Original Sample'));
 
 
 %% ------------ TESTDATA FORWARD MODEL WITH THE PARAMETERS ------------------ %%
@@ -112,18 +129,18 @@ if H >= 2
     
     % PREPROCESSS INPUTDATA TO BE SUITABLE FOR TRAIN 
     layer{1} = preprocess_train_data2D(layer{1});
-    model{1}.output = crbm_forward2D_batch_mex(model{1},layer{1},layer{1}.inputdata);
+    model{1}.output = crbm_forward2D(model{1},layer{1},layer{1}.inputdata);
     
     for i = 2:H
         layer{i}.inputdata = model{i-1}.output;
         layer{i} = preprocess_train_data2D(layer{i});
-        model{i}.output = crbm_forward2D_batch_mex(model{i},layer{i},layer{i}.inputdata);
+        model{i}.output = crbm_forward2D(model{i},layer{i},layer{i}.inputdata);
     end
     
 else
     
     layer{1} = preprocess_train_data2D(layer{1});
-    model{1}.output = crbm_forward2D_batch_mex(model{1},layer{1},layer{1}.inputdata);
+    model{1}.output = crbm_forward2D(model{1},layer{1},layer{1}.inputdata);
 end
 
 testD  = model{1}.output;
@@ -178,22 +195,4 @@ end
 % TRAIN THE CLASSIFIER & TEST THE TESTDATA
 softmaxExercise(trainDa,trainLa,testDa,testLa);
 toc;
-
-
-%% ------------------------------- Figure ----------------------------------- %%
-
-%  POOLING MAPS
-figure(1);
-[r,c,n] = size(model{1}.output(:,:,:,1));
-visWeights(reshape(model{1}.output(:,:,:,1),r*c,n)); colormap gray
-title(sprintf('The first Pooling output'))
-drawnow
-
-% ORIGINAL SAMPLE
-figure(2);
-imagesc(layer{1}.inputdata(:,:,:,1)); colormap gray; axis image; axis off
-title(sprintf('Original Sample'));
-
-
-
 
