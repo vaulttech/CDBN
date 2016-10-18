@@ -12,16 +12,29 @@ demo_add_noise = 0;
 
 %LOAD MNIST DATA TO TEST THE BINARY CDBN
 
-load ./data/mnist/mnistSmall.mat;
+% load ./data/mnist/mnist.mat;
+% train_data     = cell2mat(mnist_data(1,1));
+% train_data     = reshape(train_data', [28,28,1,50000]);
+% train_labels   = cell2mat(mnist_data(1,2));
+%
+% test_data      = cell2mat(mnist_data(3,1));
+% test_data      = reshape(test_data', [28,28,1,10000]);
+% test_labels    = cell2mat(mnist_data(3,2));
+% train_data     = train_data(:,:,:,1:50000);
+% test_data      = test_data(:,:,:,1:10000);
+% trainL         = train_labels(1:50000);
+% testL          = test_labels(1:10000);
+
+load ./CDBN/data/mnist/mnistSmall.mat;
 train_data     = trainData;
 train_data     = reshape(train_data', [28,28,1,10000]);
 test_data      = testData;
 test_data      = reshape(test_data', [28,28,1,2000]);
-
 train_data     = train_data(:,:,:,1:2000);
 test_data      = test_data(:,:,:,1:2000);
 trainL         = trainLabels(1:2000,:);
 testL          = testLabels(1:2000,:);
+
 
 % ADD NOISE
 if demo_add_noise
