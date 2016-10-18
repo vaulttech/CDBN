@@ -1,4 +1,4 @@
-function model = crbm2D(layer)
+function model = crbm2D(layer, old_W, old_v_bias, old_h_bias)
 %------------------------------------------------------------------------------%
 %                  2D convolutional Restricted Boltzmann Machine               %
 % INPUT:                                                                       %
@@ -20,11 +20,26 @@ model.beginAnneal = Inf;
 layer.s_inputdata = [size(layer.inputdata,1),size(layer.inputdata,2)];
 
 % INITIALIZE THE WEIGHTS
-model.W           = 0.01*randn(layer.s_filter(1), layer.s_filter(2), layer.n_map_v, layer.n_map_h);
+if ~exist('old_W', 'var')
+    model.W       = 0.01*randn(layer.s_filter(1), layer.s_filter(2), layer.n_map_v, layer.n_map_h);
+else
+    model.W       = old_W;
+end
+
+if ~exist('old_v_bias', 'var')
+    model.v_bias  = zeros(layer.n_map_v, 1);
+else
+    model.v_bias  = old_v_bias;
+end
+
+if ~exist('old_h_bias', 'var')
+    model.h_bias  = zeros(layer.n_map_h, 1);
+else
+    model.h_bias  = old_h_bias;
+end
+
 model.dW          = zeros(size(model.W));
-model.v_bias      = zeros(layer.n_map_v, 1);
 model.dV_bias     = zeros(layer.n_map_v, 1);
-model.h_bias      = zeros(layer.n_map_h, 1);
 model.dH_bias     = zeros(layer.n_map_h, 1);
 model.v_size      = [layer.s_inputdata(1), layer.s_inputdata(2)];
 model.v_input     = zeros(layer.s_inputdata(1), layer.s_inputdata(2), layer.n_map_v,batchsize);          
@@ -122,17 +137,19 @@ end
 %% ----------------------- OUTPUT THE POOLING LAYER ------------------------- %%
 
 % CHOOSE DIFFERENT FORWARD MODEL
-switch cpu
-    case 'matlab'
+fprintf('Generating output for next layer...\n');
+% switch cpu
+%     case 'matlab'
         output = crbm_forward2D(model,layer,layer.inputdata);
         model.output = output;
-    case 'mex'
-        output = crbm_forward2D_batch_mex(model,layer,layer.inputdata);
-        model.output = output;
-    case 'cuda'
-        output = crbm_forward2D_batch_mex(model,layer,layer.inputdata);
-        model.output = output;
-end % switch
+%     case 'mex'
+%         output = crbm_forward2D_batch_mex(model,layer,layer.inputdata);
+%         model.output = output;
+%     case 'cuda'
+%         output = crbm_forward2D_batch_mex(model,layer,layer.inputdata);
+%         model.output = output;
+% end % switch
+fprintf('Finished work on this layer.\n');
 
 end % function
 
