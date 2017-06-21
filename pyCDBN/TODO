@@ -1,0 +1,30 @@
+TODO
+====
+
+* Undertand what `crbm_whiten()` does.
+
+* Test `crbm_blocksum2D()`
+
+* Create a decent README.md
+
+* Generate decent demo.py with code that actually does something
+
+* Make cuCRBM more "usable" (I don't want to have install it by hand for myself)
+
+
+TODO in the far future
+----------------------
+
+* When supporting `same` convolutions, change `mod_1` and `mod_2` calculations
+  in `preprocess_train_data2D()` (need to not take into account the size of the
+  filter)
+
+* Add support for initializing the weights with passed values (just look at my
+  code that does that).
+	* Adjust `Model` class to receive the parameters
+	* Adjust `crbm2D()` to receive them too
+	* Adjust `cdbn2D()` to receive them too
+
+* Refactor `apply_gradient2D()`
+
+
